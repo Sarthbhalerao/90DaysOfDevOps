@@ -1,274 +1,182 @@
-# Linux Architecture
+# 🐧 Linux Architecture
 
-Linux architecture is a layered structure that defines how users, applications, and hardware interact with each other. Each layer has a specific role, making the system secure, stable, and efficient.
+![Linux Architecture](Images/Linux-Architecture.png)
 
-**1. Kernel**
+Linux architecture is a **layered structure** that shows how users, applications, and hardware interact.  
+Each layer has a specific role to keep the system **secure, stable, and efficient**.
 
--	Core of the Linux OS
+---
 
--	Manages CPU, memory, processes, devices, and networking.
+## 1. Kernel
+- **Kernel is the Core of the Linux OS**
+- Manages **CPU scheduling, Memory, Processes, Devices and networking**
+- Acts as a **bridge between software and hardware**
+- User programs **cannot access hardware directly**
 
-- Acts as a bridge between software and hardware
+---
 
--	Prevents conflicts between running programs
+## 2. System Libraries
+- Provide **common system functions** to applications
+- Allow applications to interact with the kernel **without direct access**
+- Contain **reusable, pre-written code**
+- Example: libraries used by `ls`, `ps`, `systemctl`
 
--	Kernel Types: Monolithic, Microkernel, Hybrid, Exokernel
+---
 
-**2. System Libraries**
+## 3. Shell
+- Command-line interface for users
+- Accepts and executes user commands
+- Acts as a **link between user and kernel**
+- Examples: `bash`, `sh`, `zsh`
 
--	Provide common system functions to applications
+---
 
--	Allow apps to interact with kernel without direct access
+## 4. System Utilities
+- Built-in tools for system management
+- Used for **Software installation, Monitoring, User & file management**
+- Simplify system administration
+- Examples: `ls`, `cp`, `top`, `df`, `systemctl`
 
--	Contain reusable, pre-written code
+---
 
-**3. Shell**
+## 5. Hardware Layer
+- Physical components of the system
+- Includes **CPU, RAM, Disk, I/O devices**
+- Interacts with the kernel using **device drivers**
 
--	Command-line interface for users
+---
 
--	Accepts and executes user commands
+## 🐧 What is User Space?
+- Area where **users and applications run**
+- Includes **Shell, System utilities, Libraries, Applications**
+- Communicates with kernel using **system calls**
+- **No direct access to hardware**
 
--	Acts as a link between user and kernel
+---
 
-**4. System Utilities**
+## 🐧 Init / systemd
 
--	Built-in tools for system management
+Init or systemd is the **first process started by the Linux kernel** and is responsible for booting and managing services.
 
--	Used for installation, monitoring, user & file management
+### Init (Older Systems)
+- First process started → **PID 1**
+- Starts system services during boot
+- Manages **runlevels**
 
--	Simplify administration tasks
+**Common Runlevels**
+- `0` → System shutdown  
+- `1` → Single-user mode (maintenance)  
+- `3` → Multi-user mode (no GUI)  
+- `5` → Multi-user mode with GUI  
+- `6` → Reboot  
 
-**5. Hardware Layer**
+---
 
--	Physical components of the system
+### systemd (Modern Systems)
+- Replacement for init → **PID 1**
+- Starts services **faster using parallel execution**
+- Manages:
+  - System boot
+  - Services and daemons
+  - Resources
 
--	Includes CPU, RAM, Disk, I/O devices
+**Common systemd Units**
+- **Service (.service)**:  Manages background services like `nginx`, `docker`, etc
 
--	Interacts with kernel using device drivers
+- **Socket (.socket)**: Starts services when a network or socket request is received
 
-# **What is User Space?**
+- **Timer (.timer)**: Schedules tasks automatically, just like cron
 
--	Where users and applications run
+- **Target (.target)**: Groups multiple services together (replaces runlevels)
 
--	Includes shell, system utilities, libraries, and applications
+---
 
--	Communicates with kernel using system calls
+## Why systemd is Important
+- Faster boot time
+- Automatic service recovery
+- Centralized service management (`start`, `stop`, `status`)
+- Controls key services like Docker, Kubernetes, Jenkins, Ngnix
+- Essential for servers, cloud, and production systems
 
--	No direct access to hardware (for safety)
+---
 
+## 🐧 Linux Process States
 
-# **Init / systemd:**
+A process state shows **what a process is doing at a given moment**.
 
-Init/systemd is the first process started by the Linux kernel that manages system boot and services.
+### 1. Running (R)
+- Process is currently executing on CPU  
+- Or ready and waiting for CPU time  
+- Means: **Active process**
 
-**•	Init:**
+---
 
--	It is the first process started by Linux kernel, having proceed ID 1 (PID 1)
+### 2. Sleeping
+Process is waiting for something.
 
--	It is responsible for starting system services during boot process.
+#### a) Interruptible Sleep (S)
+- Waiting for **Keyboard input, File read, Network response**
+- Can be interrupted by signals
+- Example: waiting for user input
 
--	Manages system runlevels (old systems)
+#### b) Uninterruptible Sleep (D)
+- Waiting for critical I/O (disk or hardware)
+- Cannot be interrupted until task finishes
+- Many `D` states indicate **disk or I/O problems**
 
--	A runlevel defines what state the system is in and which service should run, common runlevels are given below
+---
 
-      •	0 → System shutdown
-      
-      •	1 → Single-user mode (maintenance)
-      
-      •	3 → Multi-user mode (no GUI)
-      
-      •	5 → Multi-user mode with GUI
-      
-      •	6 → Reboot
- 
-**•	Systemd:** 
+### 3. Stopped (T)
+- Process execution is paused
+- Usually stopped manually or by debugger
+- Example: pressing `Ctrl + Z`
 
--	It is the modern replacement for init, having proceed ID 1 (PID 1)
+---
 
--	Starts services faster using parallel execution
+### 4. Zombie (Z)
+- Process finished execution
+- Parent process did not collect exit status
+- Exists only in process table
+- Means: **Dead but not cleaned**
 
--	Manages system boot, services, daemons, and resources
+---
 
--	Uses units (service, socket, timer, target), some common systemd units are given below:
+### 5. Dead (X)
+- Process completely removed
+- No longer exists in the system
+- Rarely visible
 
-    •	Service unit (.service)
-    
-    > Manages and controls background services like nginx and docker
-    
-    •	Socket unit (.socket)
-    
-    > Activates services when network or socket requests are received
-    
-    •	Timer unit (.timer)
-    
-    > Schedules and runs tasks automatically (alternative to cron)
-    
-    •	Target unit (.target)
-    
-    > Groups multiple services together (replacement for runlevels)
-
-
-**Why it matters:**
-
--	Faster boot time due to parallel startup
-
--	Better reliability with automatic service recovery
+---
 
--	Centralized service management (start, stop, status)
+## 🐧 5 Linux Commands Used Daily
 
--	Replaces older tools like SysVinit, cron, runlevels
+- `ps aux`  
+  Shows all running processes and their resource usage.  
+  Used to identify stuck or high-CPU processes.
 
--	Essential for servers, cloud, and DevOps environments
+- `top` / `htop`  
+  Displays real-time CPU and memory usage.  
+  Helpful during performance issues.
 
--	Controls services like Docker, Kubernetes, Jenkins
+- `systemctl status <service_name>`  
+  Checks whether a service is running, stopped, or failed.  
+  First command when a service goes down.
 
--	Used for service automation and monitoring
+- `cp / mv`  
+  Used for **copying or moving** data.
 
--	Improves system stability in production environments
+- `df -h`  
+  Show **disk space usage** for all mounted file systems.
 
+---
 
-# Linux Process States:
-A process state tells us what a process is doing at a particular moment in the system.
+## 🐧 Key Takeaway
 
-**1. Running (R)**
+Linux is the **foundation of most production systems**.
 
-  -	The process is currently executing on the CPU
-    
-  -	Or it is ready to run and waiting for CPU time
-    
-  -	Example: a command actively performing calculations
-    
-  -	Means: Process is active
-    
-**2. Sleeping**
+Understanding **process states** and **systemd** enables you to:
+- Debug crashed services quickly
+- Identify and resolve CPU and memory issues
+- Confidently analyze logs and service restarts
 
-  - The process is not running right now because it is waiting for something.
-    
-**a) Interruptible Sleep (S)**
-
-  -	Waiting for an event like:
-    
-  -	Keyboard input
-    
-  -	File read
-    
-  -	Network response
-    
-  -	Can be stopped by signals
-    
-  -	Example: waiting for user input
-    
-**b) Uninterruptible Sleep (D)**
-
-  -	Waiting for critical I/O operations (disk, hardware)
-    
-  -	Cannot be interrupted until the task finishes
-    
-  -	Example: waiting for disk read/write
-    
-  -	Many D states indicate I/O or disk problems
-    
-**3. Stopped (T)**
-
-  -	Process execution is paused
-    
-  -	Usually stopped manually or by a debugger
-    
-  -	Example: user presses Ctrl + Z
-    
-**4. Zombie (Z)**
-
-  -	Process has finished execution
-    
-  -	Parent process has not yet collected its exit status
-    
-  -	Process remains only as an entry in process table
-    
-  -	Means: Dead process, but not fully cleaned
-    
-**5. Dead (X)**
-
-  -	Process is completely removed
-    
-  -	No longer exists in the system
-    
-  -	Rarely visible to users
-    
-  -	Means: Fully terminated
-
-# 5 Linux commands that will use daily:
-
-**cd** 
-
-> It is used to change the directory.
-
-**pwd**
-
-> It is used to get the present working directory.
-
-**ls**
-
-> It shows the list of files and directories in the present working directory
-
-**mkdir**
-
-> This is used to create a new directory.
-
-**cp**
-
-> It is used to copy files and directories from one location to another.
-
-**mv**
-
-> It is used to move or rename files and directories from one location to another.
-
-**rmdir**
-
-> It is used to remove the empty directory.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+> This knowledge saves **hours during incidents** and is critical for DevOps engineers.
