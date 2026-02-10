@@ -93,6 +93,12 @@
 
 # Scenario 3: Finding Service Logs
 
+- A developer asks: "Where are the logs for the 'docker' service?"
+- The service is managed by systemd.
+- What commands would you use?
+
+## My Approach:
+
 - **Step 1: systemctl status docker**  
 - **Why:** To confirm service status and identify log source
 
@@ -112,4 +118,26 @@
 
 # Scenario 4: File Permissions Issue
 
+- A script at /home/user/backup.sh is not executing.
+- When you run it: ./backup.sh
+- You get: "Permission denied"
 
+- What commands would you use to fix this?
+
+## My Approach:
+
+- **Step 1: Check current permissions**
+- **Command:** ls -l /home/user/backup.sh
+- **Look for:** -rw-r--r-- (notice no **'x'** = not executable)
+
+- **Step 2: Add execute permission**
+- **Command:** chmod +x /home/user/backup.sh
+
+- **Step 3: Verify it worked**
+- **Command:** ls -l /home/user/backup.sh
+- **Look for:** -rwxr-xr-x (notice **'x'** = executable)
+
+- **Step 4: Try running it**
+- **Command:** ./backup.sh
+
+---
