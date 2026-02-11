@@ -1,6 +1,6 @@
-# Day 09 – Linux User & Group Management Challenge
+# 🐧Day 09 – Linux User & Group Management Challenge
 ---
-## Today's goal is to practice user and group management by completing hands-on challenges.
+## 🐧Today's goal is to practice user and group management by completing hands-on challenges.
 
 ### Figure out how to:
 
@@ -9,7 +9,7 @@
 - Set up shared directories with group permissions
 ---
 
-## Users & Groups Created
+## 🐧Users & Groups Created
 - Users: tokyo, berlin, professor, nairobi
   
   <img width="1587" height="506" alt="image" src="https://github.com/user-attachments/assets/9a67a269-e693-48df-9726-3804316cd2d6" />
@@ -20,7 +20,7 @@
 
 --- 
 
-## Group Assignments
+## 🐧Group Assignments
 - tokyo → developers, project-team
 - berlin → developers, admins
 - professor → admins
@@ -30,14 +30,14 @@
 
 ---
 
-## Directories Created
+## 🐧Directories Created
 - /opt/dev-project (developers, 775)
 - /opt/team-workspace (project-team, 775)
 
 <img width="1673" height="1046" alt="image" src="https://github.com/user-attachments/assets/3819c6fb-d5be-4bb8-ab1b-f117699f1e53" />
 
 ---
-## Test cases
+## 🐧Test cases
 
 - Test by creating files as **tokyo and berlin**
 
@@ -49,7 +49,7 @@
 
 ---
 
-## Commands Used
+## 🐧Commands Used
 - `useradd -m <username>` : create a user with home directory
 - `passwd <username>` : set / update the user password.
 - `cat /etc/passwd` : Display all system user and their account detils.
@@ -65,7 +65,7 @@
 
 ---
 
-## What I Learned
+## 🐧What I Learned
 - How Linux manages multiple users and groups
 - Importance of group permissions for shared access
 - How to safely test access using sudo -u
